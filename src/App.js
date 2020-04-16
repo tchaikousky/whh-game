@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import GameBoard from './components/GameBoard.jsx';
 import NavBar from './components/NavBar.jsx';
-
 import './App.css';
 
 class App extends Component {
@@ -9,8 +8,11 @@ class App extends Component {
     super();
     this.state = {
       gameBoard: [],
+      gameCount: 0,
+      nextClicked: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleNext = this.handleNext.bind(this);
   }
 
   getData = async () => {
@@ -29,19 +31,35 @@ class App extends Component {
     });
   }
 
+  handleNext() {
+    this.setState(prevState => {
+      // LOOK HERE: dirty fix, need to clean up later
+      console.log(this.state.gameBoard[0].length)
+      if(this.state.gameCount < this.state.gameBoard[0].length - 1) {
+        const updatedCount = prevState.gameCount += .5;
+        
+        return {
+          gameCount: updatedCount,
+          nextClicked: true
+        }
+      }
+    })
+  }
+
   render() {
     let gameStarted;
-    console.log(this.state.gameBoard)
+
     if(this.state.gameBoard.length > 0) {
-      gameStarted = <GameBoard gameBoard={this.state.gameBoard[0][39]}/>
+      gameStarted = <GameBoard gameBoard={this.state.gameBoard[0][this.state.gameCount]} nextClicked={this.state.nextClicked} />
     }
 
     return (
       <div className="homepage">
         <NavBar />
         <form onSubmit={this.handleSubmit}>
-          <button type="submit" >Play</button>
+          <button type="submit" onSubmit={this.handleSubmit} >Play</button>
         </form>
+        <button type="submit" onClick={this.handleNext}>Next</button>
         <div className="App">
           {gameStarted}
         </div>
