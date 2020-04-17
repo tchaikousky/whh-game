@@ -1,7 +1,7 @@
 import React from 'react';
 
 const GameTile = props => {
-    // const { gameTile } = props;
+    
     console.log(props.gameTile)
     return(
         <div>

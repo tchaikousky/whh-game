@@ -34,7 +34,6 @@ class App extends Component {
   handleNext() {
     this.setState(prevState => {
       // LOOK HERE: dirty fix, need to clean up later
-      console.log(this.state.gameBoard[0].length)
       if(this.state.gameCount < this.state.gameBoard[0].length - 1) {
         const updatedCount = prevState.gameCount += .5;
         
