@@ -1,6 +1,5 @@
 import React from 'react';
 import GameTile from './GameTile.jsx';
-import GuessInput from './GuessInput.jsx';
 import { Component } from 'react';
 
 class GameBoard extends Component {
@@ -14,11 +13,16 @@ class GameBoard extends Component {
     render() {
         console.log(this.props.gameBoard)
         return(
-            <div>
-                <GameTile gameTile={this.props.gameBoard.image1} />
-                <GameTile gameTile={this.props.gameBoard.image2} />
-                <GameTile gameTile={this.props.gameBoard.image3} />
-                <GuessInput solution={this.props.gameBoard.solution} />
+            <div className="gameBoard">
+                <div className="tile1">
+                    <GameTile gameTile={this.props.gameBoard.image1} />
+                </div>
+                <div className="tile2">
+                    <GameTile gameTile={this.props.gameBoard.image2} />
+                </div>
+                <div className="tile3">
+                    <GameTile gameTile={this.props.gameBoard.image3} />    
+                </div>
             </div>
         )
     }

@@ -4,10 +4,10 @@ import React from 'react';
 
 function NavBar() {
     return(
-        <div>
+        <div className="navBar">
             <ul>
-                <li>Home</li>
-                <li>New Game</li>
+                <li><button>Home</button></li>
+                <li><button>New Game</button></li>
             </ul>
         </div>
     )

@@ -9,10 +9,14 @@ class App extends Component {
     this.state = {
       gameBoard: [],
       gameCount: 0,
-      nextClicked: false
+      nextClicked: false,
+      inputValue: "",
+      score: 0
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNext = this.handleNext.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
   getData = async () => {
@@ -31,25 +35,67 @@ class App extends Component {
     });
   }
 
-  handleNext() {
-    this.setState(prevState => {
-      // LOOK HERE: dirty fix, need to clean up later
-      if(this.state.gameCount < this.state.gameBoard[0].length - 1) {
-        const updatedCount = prevState.gameCount += .5;
-        
-        return {
-          gameCount: updatedCount,
-          nextClicked: true
-        }
-      }
+  handleChange(event) {
+    this.setState({
+      inputValue: event.target.value
     })
   }
 
+  handleNext(event) {
+    event.preventDefault();
+    let form = document.getElementById("inputSubmit")
+    this.setState(prevState => {
+      if(this.state.inputValue === this.state.gameBoard[0][this.state.gameCount].solution) { 
+        const updatedCount = prevState.gameCount + 1;
+        const newScore = prevState.score + 10;
+        form.reset();
+        this.forceUpdate();
+        return {
+          gameCount: updatedCount,
+          nextClicked: true,
+          score: newScore
+        }
+        
+      }else {
+        const newScore = prevState.score - 5;
+        form.reset();
+        return {
+          score: newScore
+        }
+      }
+      
+    })
+    
+  }
+
+  handleKeyPress(event) {
+    
+    if(event.key === 'Enter') {
+      this.handleNext(event);
+    }else {
+      this.handleChange(event);
+    }
+  }
   render() {
     let gameStarted;
-
-    if(this.state.gameBoard.length > 0) {
-      gameStarted = <GameBoard gameBoard={this.state.gameBoard[0][this.state.gameCount]} nextClicked={this.state.nextClicked} />
+    let inputField;
+    let nextButton;
+    let score;
+    
+    if (this.state.gameBoard.length > 0 && this.state.gameCount % 1 === 0) {
+      
+      if(this.state.gameCount > this.state.gameBoard[0].length - 2) {
+        gameStarted = <h1>Congratulations</h1>
+        inputField = <h3>Your have completed the game.</h3>
+        score = <h3>Final Score: {this.state.score}</h3>
+        nextButton = <button type="button">home</button>
+        
+      } else {
+        score = <h3>Score: {this.state.score}</h3>
+        gameStarted = <GameBoard gameBoard={this.state.gameBoard[0][this.state.gameCount]} nextClicked={this.state.nextClicked} />
+        inputField = <input type="text" onChange={this.handleChange} onKeyPress={this.handleKeyPress} ></input>
+        nextButton = <button type="submit" onClick={this.handleNext}>Next</button>
+      }
     }
 
     return (
@@ -58,9 +104,16 @@ class App extends Component {
         <form onSubmit={this.handleSubmit}>
           <button type="submit" onSubmit={this.handleSubmit} >Play</button>
         </form>
-        <button type="submit" onClick={this.handleNext}>Next</button>
-        <div className="App">
-          {gameStarted}
+        <div className="appContainer">
+            {score}
+          <div className="App">
+            {gameStarted}
+            <form id="inputSubmit">
+              {inputField}
+              {nextButton}
+            </form>
+            
+          </div>
         </div>
       </div>
     );
